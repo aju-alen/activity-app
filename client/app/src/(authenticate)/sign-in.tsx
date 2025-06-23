@@ -18,7 +18,8 @@ const SignIn = () => {
     if (result.success) {
       // Proceed with Google Sign-In
       console.log('Location verified. Proceeding with Google Sign-In...');
-      // router.push('/path-to-google-auth'); 
+      // Navigate to sign-up flow starting from phone verification step
+      router.push('/src/(authenticate)/sign-up-flow?startStep=phone');
     } else {
       setLocationErrorMsg(result.message);
       setLocationError(true);

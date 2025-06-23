@@ -1,4 +1,4 @@
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import React, { useState } from 'react';
 import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
@@ -18,7 +18,17 @@ const STEPS = [
 
 const SignUpFlow = () => {
   const { theme } = useTheme();
-  const [currentStep, setCurrentStep] = useState(0);
+  const { startStep } = useLocalSearchParams<{ startStep?: string }>();
+  
+  // Initialize currentStep based on startStep parameter
+  const getInitialStep = () => {
+    if (startStep === 'phone') {
+      return 2; // Start from phone verification step
+    }
+    return 0; // Default start from location step
+  };
+
+  const [currentStep, setCurrentStep] = useState(getInitialStep());
   const [secureTextEntry, setSecureTextEntry] = useState(true);
   const [locationErrorMsg, setLocationErrorMsg] = useState<string | null>(null);
   const [locationError, setLocationError] = useState<boolean>(false);
