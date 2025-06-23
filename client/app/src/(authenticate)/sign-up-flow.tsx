@@ -4,14 +4,15 @@ import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View, Image 
 import { Ionicons } from '@expo/vector-icons';
 import Animated, { useAnimatedStyle, withTiming } from 'react-native-reanimated';
 
-import { COLORS } from '../../../constants/Colors';
-import { FONTS } from '../../../constants/Fonts';
 import { useTheme } from '@/providers/ThemeProviders';
+import { FONTS } from '../../../constants/Fonts';
+import { checkKeralaLocation } from '@/utils/LocationServiceCheck';
+import ToastNotification from '@/utils/ToastNotification';
 
 const STEPS = [
+  { id: 'location', title: 'Location' },
   { id: 'details', title: 'Your Details' },
   { id: 'phone', title: 'Phone Number' },
-  { id: 'location', title: 'Location' },
   { id: 'picture', title: 'Profile Picture' },
 ];
 
@@ -19,6 +20,8 @@ const SignUpFlow = () => {
   const { theme } = useTheme();
   const [currentStep, setCurrentStep] = useState(0);
   const [secureTextEntry, setSecureTextEntry] = useState(true);
+  const [locationErrorMsg, setLocationErrorMsg] = useState<string | null>(null);
+  const [locationError, setLocationError] = useState<boolean>(false);
 
   const progress = (currentStep + 1) / STEPS.length;
   const animatedWidth = useAnimatedStyle(() => {
@@ -30,6 +33,18 @@ const SignUpFlow = () => {
   const goToNextStep = () => {
     if (currentStep < STEPS.length - 1) {
       setCurrentStep(currentStep + 1);
+    }
+  };
+
+  const handleEnableLocation = async () => {
+    setLocationErrorMsg(null);
+    const result = await checkKeralaLocation();
+    if (result.success) {
+      setLocationError(false);
+      goToNextStep();
+    } else {
+      setLocationErrorMsg(result.message);
+      setLocationError(true);
     }
   };
 
@@ -152,6 +167,7 @@ const SignUpFlow = () => {
               <Text style={[styles.description, { color: theme.text.secondary }]}>
                 To find activities near you, we need access to your location. This will help you discover events and connect with people in your area.
               </Text>
+              {locationError && <ToastNotification message={locationErrorMsg || ''} type="error" />}
               <View style={[styles.imageContainer, { backgroundColor: theme.surface }]}>
                 <Image 
                   source={{ uri: 'https://i.imgur.com/g91t4O5.png' }} 
@@ -162,9 +178,9 @@ const SignUpFlow = () => {
             </View>
             <TouchableOpacity 
               style={[styles.nextButton, { backgroundColor: theme.primary }]} 
-              onPress={goToNextStep}
+              onPress={handleEnableLocation}
             >
-              <Text style={[styles.nextButtonText, { color: theme.text.inverse }]}>Enable location</Text>
+              <Text style={[styles.nextButtonText, { color: theme.text.primary }]}>Enable location</Text>
             </TouchableOpacity>
           </View>
         );
@@ -264,7 +280,7 @@ const styles = StyleSheet.create({
     marginTop: 24,
   },
   nextButtonText: {
-    fontFamily: FONTS.bold,
+    fontFamily: FONTS.medium,
     fontSize: 16,
   },
   locationStepContainer: {
@@ -289,7 +305,14 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 24,
     textAlign: 'center',
-    marginBottom: 24,
+    marginBottom: 16,
+  },
+  errorText: {
+    fontFamily: FONTS.regular,
+    fontSize: 14,
+    color: 'red',
+    textAlign: 'center',
+    marginBottom: 16,
   },
   imageContainer: {
     padding: 20,

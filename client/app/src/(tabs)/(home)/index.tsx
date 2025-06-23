@@ -45,6 +45,8 @@ const MOCK_ACTIVITIES = [
 
 const HomePage = () => {
   const { theme } = useTheme();
+  console.log(theme, "theme in HomePage");
+  
   const [scrollY] = useState(new Animated.Value(0));
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedActivity, setSelectedActivity] = useState(null);

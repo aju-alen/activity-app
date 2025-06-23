@@ -32,7 +32,7 @@ import React, {
     };
   
     useEffect(() => {
-      setTheme(!isDarkMode ? COLORS.dark : COLORS.light);
+      setTheme(isDarkMode ? COLORS.dark : COLORS.light);
     }, [isDarkMode]);
   
     return (

@@ -1,13 +1,30 @@
 import { router } from 'expo-router';
-import React from 'react';
+import React, { useState } from 'react';
 import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 import { FONTS } from '../../../constants/Fonts';
 import { useTheme } from '@/providers/ThemeProviders';
+import { checkKeralaLocation } from '@/utils/LocationServiceCheck';
+import ToastNotification from '@/utils/ToastNotification';
 
 const SignIn = () => {
   const { theme } = useTheme();
+  const [locationErrorMsg, setLocationErrorMsg] = useState<string | null>(null);
+  const [locationError, setLocationError] = useState<boolean>(false);
+
+  const handleGoogleSignIn = async () => {
+    const result = await checkKeralaLocation();
+    if (result.success) {
+      // Proceed with Google Sign-In
+      console.log('Location verified. Proceeding with Google Sign-In...');
+      // router.push('/path-to-google-auth'); 
+    } else {
+      setLocationErrorMsg(result.message);
+      setLocationError(true);
+    }
+  };
+
   return (
     <ScrollView 
       style={[styles.container, { backgroundColor: theme.background }]} 
@@ -52,8 +69,11 @@ const SignIn = () => {
           <View style={[styles.divider, { backgroundColor: theme.border }]} />
         </View>
 
+        {locationError && <ToastNotification message={locationErrorMsg || ''} type="error" />}
+
         <TouchableOpacity 
           style={[styles.googleButton, { backgroundColor: theme.surface, borderColor: theme.border }]}
+          onPress={handleGoogleSignIn}
         >
           <Ionicons name="logo-google" size={22} color={theme.text.primary} />
           <Text style={[styles.googleButtonText, { color: theme.text.primary }]}>Continue with Google</Text>

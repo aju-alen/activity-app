@@ -1,15 +1,31 @@
-import { router } from 'expo-router';
-import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, Text, View, TouchableOpacity, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { router } from 'expo-router';
+import * as Location from 'expo-location';
 
-import { COLORS } from '../../../constants/Colors';
-import { FONTS } from '../../../constants/Fonts';
 import { useTheme } from '@/providers/ThemeProviders';
+import { FONTS } from '../../../constants/Fonts';
+import { checkKeralaLocation } from '@/utils/LocationServiceCheck'
+import ToastNotification from '@/utils/ToastNotification';
 
-
-const SignUpOptions = () => {
+export default function SignUpOptions() {
   const { theme } = useTheme();
+  const [locationError, setLocationError] = useState<boolean>(false);
+  const [locationErrorMsg, setLocationErrorMsg] = useState<string | null>(null);
+
+  const handleGoogleSignIn = async () => {
+    const result = await checkKeralaLocation();
+    if (result.success) {
+      // Proceed with Google Sign-In
+      console.log('Location verified. Proceeding with Google Sign-In...');
+      // router.push('/path-to-google-auth'); 
+    } else {
+      setLocationError(true);
+      setLocationErrorMsg(result.message);
+    }
+  };
+
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
       <View style={styles.header}>
@@ -17,30 +33,20 @@ const SignUpOptions = () => {
           <Ionicons name="arrow-back" size={24} color={theme.text.primary} />
         </TouchableOpacity>
       </View>
-
       <View style={styles.content}>
-        <Text style={[styles.title, { color: theme.text.primary }]}>Create an Account</Text>
-
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity 
-            style={[styles.button, { 
-              backgroundColor: theme.surface,
-              borderColor: theme.border 
-            }]} 
-            onPress={()=> router.push('/src/(authenticate)/sign-up-flow')}
-          >
-            <View style={[styles.iconContainer, { backgroundColor: theme.primary }]}>
-              <Ionicons name="mail" size={22} color={theme.text.inverse} />
-            </View>
-            <Text style={[styles.buttonText, { color: theme.text.primary }]}>Sign up with Email</Text>
-            <View style={{ width: 22 }} />
-          </TouchableOpacity>
-        
+        <Text style={[styles.title, { color: theme.text.primary }]}>Join our community</Text>
+        <Text style={[styles.subtitle, { color: theme.text.secondary }]}>
+          Discover and host activities with people around you.
+        </Text>
+      </View>
+      {locationError && <ToastNotification message={locationErrorMsg || ''} type="error" />}
+      <View style={styles.footer}>
           <TouchableOpacity 
             style={[styles.button, { 
               backgroundColor: theme.surface,
               borderColor: theme.border 
             }]}
+            onPress={handleGoogleSignIn}
           >
             <View style={[styles.iconContainer, { backgroundColor: theme.secondary[1] }]}>
               <Ionicons name="logo-google" size={22} color={theme.text.inverse} />
@@ -48,38 +54,41 @@ const SignUpOptions = () => {
             <Text style={[styles.buttonText, { color: theme.text.primary }]}>Sign in with Google</Text>
             <View style={{ width: 22 }} />
           </TouchableOpacity>
-        </View>
-      </View>
-
-      <View style={styles.footer}>
-        <TouchableOpacity onPress={() => router.push('/src/(authenticate)/sign-in')}>
+          <TouchableOpacity 
+            style={[styles.button, { 
+              backgroundColor: theme.surface,
+              borderColor: theme.border 
+            }]}
+            onPress={() => router.push('/src/(authenticate)/sign-up-flow')}
+          >
+            <View style={[styles.iconContainer, { backgroundColor: theme.secondary[0] }]}>
+              <Ionicons name="mail-outline" size={22} color={theme.text.inverse} />
+            </View>
+            <Text style={[styles.buttonText, { color: theme.text.primary }]}>Sign up with Email</Text>
+            <View style={{ width: 22 }} />
+          </TouchableOpacity>
+        <TouchableOpacity onPress={()=> router.push('/src/(authenticate)/sign-in')}>
           <Text style={[styles.signInText, { color: theme.text.secondary }]}>
-            Already have an account?{' '}
-            <Text style={[styles.signInLink, { color: theme.text.primary }]}>Sign in</Text>
+            Already have an account? <Text style={[styles.signInLink, { color: theme.text.primary }]}>Sign In</Text>
           </Text>
         </TouchableOpacity>
       </View>
     </View>
   );
-};
-
-export default SignUpOptions;
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 24,
-    paddingTop: 60,
-    paddingBottom: 40,
   },
   header: {
-    position: 'absolute',
-    top: 60,
-    left: 24,
-    zIndex: 1,
+    marginTop: 60,
   },
   backButton: {
-    padding: 8,
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
   },
   content: {
     flex: 1,
@@ -88,25 +97,33 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: FONTS.bold,
-    fontSize: 28,
-    marginBottom: 48,
+    fontSize: 32,
+    textAlign: 'center',
+    marginBottom: 8,
   },
-  buttonContainer: {
-    width: '100%',
+  subtitle: {
+    fontFamily: FONTS.regular,
+    fontSize: 16,
+    textAlign: 'center',
+    lineHeight: 24,
+    maxWidth: '80%',
+  },
+  footer: {
+    paddingBottom: 40,
     gap: 16,
   },
   button: {
-    padding: 12,
-    borderRadius: 14,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    padding: 12,
+    borderRadius: 14,
     borderWidth: 1,
   },
   iconContainer: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -114,13 +131,11 @@ const styles = StyleSheet.create({
     fontFamily: FONTS.medium,
     fontSize: 16,
   },
-  footer: {
-    alignItems: 'center',
-    paddingBottom: 20,
-  },
   signInText: {
     fontFamily: FONTS.regular,
-    fontSize: 16,
+    fontSize: 14,
+    textAlign: 'center',
+    marginTop: 8,
   },
   signInLink: {
     fontFamily: FONTS.bold,
