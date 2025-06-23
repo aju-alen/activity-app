@@ -63,7 +63,7 @@ export default function Page() {
       {!token ? (
         <Redirect href={'/src/(welcome)'} />
       ) : (
-        <Redirect href={'/src/(tabs)'} />
+        <Redirect href={'/src/(tabs)/(home)'} />
       )}
     </View>
   );

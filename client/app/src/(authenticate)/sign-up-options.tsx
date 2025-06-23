@@ -5,12 +5,13 @@ import { Ionicons } from '@expo/vector-icons';
 
 import { COLORS } from '../../../constants/Colors';
 import { FONTS } from '../../../constants/Fonts';
+import { useTheme } from '@/providers/ThemeProviders';
 
-const theme = COLORS.light;
 
 const SignUpOptions = () => {
+  const { theme } = useTheme();
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
           <Ionicons name="arrow-back" size={24} color={theme.text.primary} />
@@ -18,22 +19,33 @@ const SignUpOptions = () => {
       </View>
 
       <View style={styles.content}>
-        <Text style={styles.title}>Create an Account</Text>
+        <Text style={[styles.title, { color: theme.text.primary }]}>Create an Account</Text>
 
         <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.button} onPress={()=> router.push('/src/(authenticate)/sign-up-flow')}>
+          <TouchableOpacity 
+            style={[styles.button, { 
+              backgroundColor: theme.surface,
+              borderColor: theme.border 
+            }]} 
+            onPress={()=> router.push('/src/(authenticate)/sign-up-flow')}
+          >
             <View style={[styles.iconContainer, { backgroundColor: theme.primary }]}>
               <Ionicons name="mail" size={22} color={theme.text.inverse} />
             </View>
-            <Text style={styles.buttonText}>Sign up with Email</Text>
+            <Text style={[styles.buttonText, { color: theme.text.primary }]}>Sign up with Email</Text>
             <View style={{ width: 22 }} />
           </TouchableOpacity>
         
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity 
+            style={[styles.button, { 
+              backgroundColor: theme.surface,
+              borderColor: theme.border 
+            }]}
+          >
             <View style={[styles.iconContainer, { backgroundColor: theme.secondary[1] }]}>
               <Ionicons name="logo-google" size={22} color={theme.text.inverse} />
             </View>
-            <Text style={styles.buttonText}>Sign in with Google</Text>
+            <Text style={[styles.buttonText, { color: theme.text.primary }]}>Sign in with Google</Text>
             <View style={{ width: 22 }} />
           </TouchableOpacity>
         </View>
@@ -41,9 +53,9 @@ const SignUpOptions = () => {
 
       <View style={styles.footer}>
         <TouchableOpacity onPress={() => router.push('/src/(authenticate)/sign-in')}>
-          <Text style={styles.signInText}>
+          <Text style={[styles.signInText, { color: theme.text.secondary }]}>
             Already have an account?{' '}
-            <Text style={styles.signInLink}>Sign in</Text>
+            <Text style={[styles.signInLink, { color: theme.text.primary }]}>Sign in</Text>
           </Text>
         </TouchableOpacity>
       </View>
@@ -56,7 +68,6 @@ export default SignUpOptions;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: theme.background,
     paddingHorizontal: 24,
     paddingTop: 60,
     paddingBottom: 40,
@@ -78,7 +89,6 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: FONTS.bold,
     fontSize: 28,
-    color: theme.text.primary,
     marginBottom: 48,
   },
   buttonContainer: {
@@ -86,14 +96,12 @@ const styles = StyleSheet.create({
     gap: 16,
   },
   button: {
-    backgroundColor: theme.surface,
     padding: 12,
     borderRadius: 14,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     borderWidth: 1,
-    borderColor: theme.border,
   },
   iconContainer: {
     width: 44,
@@ -105,7 +113,6 @@ const styles = StyleSheet.create({
   buttonText: {
     fontFamily: FONTS.medium,
     fontSize: 16,
-    color: theme.text.primary,
   },
   footer: {
     alignItems: 'center',
@@ -114,10 +121,8 @@ const styles = StyleSheet.create({
   signInText: {
     fontFamily: FONTS.regular,
     fontSize: 16,
-    color: theme.text.secondary,
   },
   signInLink: {
     fontFamily: FONTS.bold,
-    color: theme.text.primary,
   },
 }); 
