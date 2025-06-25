@@ -1,12 +1,12 @@
 import * as Location from 'expo-location';
-import ToastNotification from './ToastNotification';
+import { developmentErrorLogs, developmentLogs } from './DevelopmentLogs';
 
 interface LocationCheckResult {
   success: boolean;
   message: string;
 }
 
-export const checkKeralaLocation = async (): Promise<LocationCheckResult> => {
+export const checkAvailableLocation = async (): Promise<LocationCheckResult> => {
   let { status } = await Location.requestForegroundPermissionsAsync();
   if (status !== 'granted') {
     return {
@@ -24,7 +24,9 @@ export const checkKeralaLocation = async (): Promise<LocationCheckResult> => {
 
     if (geocodedAddresses && geocodedAddresses[0]) {
       const region = geocodedAddresses[0].region;
-      if (region === 'Kerala') {
+      developmentLogs(region, 'Region Approved');
+      
+      if (region === 'Kerala' || region === 'Bangalore' || region === 'California') {
         return {
           success: true,
           message: 'Location verified.',
@@ -32,7 +34,7 @@ export const checkKeralaLocation = async (): Promise<LocationCheckResult> => {
       } else {
         return {
           success: false,
-          message: 'Sorry, our service is currently only available in Kerala.',
+          message: 'Sorry, our service is currently only available in Kerala and Bangalore.',
         };
       }
     } else {
@@ -42,7 +44,7 @@ export const checkKeralaLocation = async (): Promise<LocationCheckResult> => {
       };
     }
   } catch (error) {
-    console.error(error);
+    developmentErrorLogs(error, 'Error fetching location');
     return {
       success: false,
       message: 'An error occurred while fetching your location.',

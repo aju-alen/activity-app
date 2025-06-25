@@ -1,3 +1,10 @@
+/**
+ * Colors
+ *
+ * This file centralizes all colors used across the application.
+ * Import from this file instead of defining colors in individual files.
+ */
+
 export const COLORS = {
   light: {
     mode: 'light',

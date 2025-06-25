@@ -1,20 +1,20 @@
 {
   "expo": {
-    "name": "activity",
-    "slug": "activity",
+    "name": "croudup",
+    "slug": "croudup",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
+    "icon": "./assets/images/crowdup_logo.png",
+    "scheme": "croudup",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.rise-admin.activity"
+      "bundleIdentifier": "com.alenaju.croudup"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "./assets/images/crowdup_logo.png",
         "backgroundColor": "#ffffff"
       },
       "permissions": [
@@ -24,19 +24,25 @@
         "android.permission.FOREGROUND_SERVICE",
         "android.permission.FOREGROUND_SERVICE_LOCATION"
       ],
-      "package": "com.rise_admin.activity"
+      "package": "com.alenaju.croudup"
     },
     "web": {
       "bundler": "metro",
-      "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "output": "server",
+      "favicon": "./assets/images/crowdup_logo.png"
     },
     "plugins": [
+      [
+        "@react-native-google-signin/google-signin",
+        {
+          "iosUrlScheme": "com.googleusercontent.apps.1002168949968-rhfqtg8jo2tauhpr9oq9g6lcv0bd5n37"
+        }
+      ],
       "expo-router",
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash-icon.png",
+          "image": "./assets/images/crowdup_splash.png",
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
@@ -48,10 +54,19 @@
           "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location. This is required for the app to function properly.",
           "isAndroidBackgroundLocationEnabled": true
         }
-      ]
+      ],
+      "expo-secure-store"
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "086e7715-5adf-486e-b6c7-1afdda4c16e3"
+      }
     }
   }
 }

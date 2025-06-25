@@ -1,6 +1,7 @@
 import React from 'react';
 import { Stack } from 'expo-router';
 import { ThemeProvider } from '@/providers/ThemeProviders';
+import { AuthProvider } from '@/providers/GoogleAuthProvider';
 
   
 
@@ -8,6 +9,7 @@ import { ThemeProvider } from '@/providers/ThemeProviders';
 
 const RootLayout = () => {
     return (
+        <AuthProvider>
         <ThemeProvider>
         <Stack >
             <Stack.Screen name="src/(welcome)" options={{ headerShown: false }} />
@@ -16,7 +18,7 @@ const RootLayout = () => {
             <Stack.Screen name="+not-found" options={{ headerShown: false }} />
         </Stack>
         </ThemeProvider>
-        
+        </AuthProvider>
     );
 };
 

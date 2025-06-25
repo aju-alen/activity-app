@@ -1,3 +1,10 @@
+/**
+ * Fonts
+ *
+ * This file centralizes all fonts used across the application.
+ * Import from this file instead of defining fonts in individual files.
+ */
+
 export const FONTS = {
   blackItalic: 'SF_Black_Italic',
   bold: 'SF_Bold',

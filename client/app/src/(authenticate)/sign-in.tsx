@@ -5,23 +5,35 @@ import { Ionicons } from '@expo/vector-icons';
 
 import { FONTS } from '../../../constants/Fonts';
 import { useTheme } from '@/providers/ThemeProviders';
-import { checkKeralaLocation } from '@/utils/LocationServiceCheck';
+import { checkAvailableLocation } from '@/utils/LocationServiceCheck';
 import ToastNotification from '@/utils/ToastNotification';
+import { useAuth } from '@/providers/GoogleAuthProvider';
+import { developmentLogs } from '@/utils/DevelopmentLogs';
 
 const SignIn = () => {
+  const { signIn } = useAuth();
   const { theme } = useTheme();
   const [locationErrorMsg, setLocationErrorMsg] = useState<string | null>(null);
   const [locationError, setLocationError] = useState<boolean>(false);
 
   const handleGoogleSignIn = async () => {
-    const result = await checkKeralaLocation();
-    if (result.success) {
-      // Proceed with Google Sign-In
-      console.log('Location verified. Proceeding with Google Sign-In...');
-      // Navigate to sign-up flow starting from phone verification step
-      router.push('/src/(authenticate)/sign-up-flow?startStep=phone');
-    } else {
-      setLocationErrorMsg(result.message);
+    try {
+      const result = await checkAvailableLocation();
+      if (result.success) {
+        developmentLogs('Location verified. Proceeding with Google Sign-In...');
+        await signIn();
+
+        // TODO: Enable below to move to phone auth after google auth
+        // router.push('/src/(authenticate)/sign-up-flow?startStep=phone');
+      } else {
+        setLocationErrorMsg(result.message);
+        setLocationError(true);
+      }
+    } catch (error) {
+      developmentLogs(error, 'Google Sign-In error');
+      // Display Google Sign-In errors to the user
+      const errorMessage = error instanceof Error ? error.message : 'Google Sign-In failed';
+      setLocationErrorMsg(errorMessage);
       setLocationError(true);
     }
   };

@@ -6,24 +6,40 @@ import * as Location from 'expo-location';
 
 import { useTheme } from '@/providers/ThemeProviders';
 import { FONTS } from '../../../constants/Fonts';
-import { checkKeralaLocation } from '@/utils/LocationServiceCheck'
+import { checkAvailableLocation } from '@/utils/LocationServiceCheck'
 import ToastNotification from '@/utils/ToastNotification';
+import { useAuth } from '@/providers/GoogleAuthProvider';
+import { developmentLogs } from '@/utils/DevelopmentLogs';
 
 export default function SignUpOptions() {
   const { theme } = useTheme();
   const [locationError, setLocationError] = useState<boolean>(false);
   const [locationErrorMsg, setLocationErrorMsg] = useState<string | null>(null);
+  const { signIn,user } = useAuth();
 
   const handleGoogleSignIn = async () => {
-    const result = await checkKeralaLocation();
-    if (result.success) {
-      // Proceed with Google Sign-In
-      console.log('Location verified. Proceeding with Google Sign-In...');
-      // Navigate to sign-up flow starting from phone verification step
-      router.push('/src/(authenticate)/sign-up-flow?startStep=phone');
-    } else {
+    setLocationError(false);
+    setLocationErrorMsg(null);
+     try{
+      const result = await checkAvailableLocation();
+      if (result.success) {
+        // Proceed with Google Sign-In
+        developmentLogs('Location verified. Proceeding with Google Sign-In...');
+        // Navigate to sign-up flow starting from phone verification step
+        await signIn();
+        
+        // router.push('/src/(authenticate)/sign-up-flow?startStep=phone');
+      } else {
+        setLocationError(true);
+        setLocationErrorMsg(result.message);
+      }
+    } catch(error){
+      developmentLogs(error, 'Google Sign-In error');
+      // Display Google Sign-In errors to the user
+      const errorMessage = error instanceof Error ? error.message : 'Google Sign-In failed';
       setLocationError(true);
-      setLocationErrorMsg(result.message);
+      setLocationErrorMsg(errorMessage);
+
     }
   };
 

@@ -6,7 +6,7 @@ import Animated, { useAnimatedStyle, withTiming } from 'react-native-reanimated'
 
 import { useTheme } from '@/providers/ThemeProviders';
 import { FONTS } from '../../../constants/Fonts';
-import { checkKeralaLocation } from '@/utils/LocationServiceCheck';
+import { checkAvailableLocation } from '@/utils/LocationServiceCheck';
 import ToastNotification from '@/utils/ToastNotification';
 
 const STEPS = [
@@ -48,7 +48,7 @@ const SignUpFlow = () => {
 
   const handleEnableLocation = async () => {
     setLocationErrorMsg(null);
-    const result = await checkKeralaLocation();
+    const result = await checkAvailableLocation();
     if (result.success) {
       setLocationError(false);
       goToNextStep();
@@ -80,14 +80,6 @@ const SignUpFlow = () => {
                 color: theme.text.primary 
               }]} 
               keyboardType="email-address" 
-            />
-            <TextInput 
-              placeholder="Username" 
-              style={[styles.input, { 
-                backgroundColor: theme.surface,
-                borderColor: theme.border,
-                color: theme.text.primary 
-              }]} 
             />
             <TextInput 
               placeholder="Date of Birth (YYYY-MM-DD)" 
@@ -180,7 +172,7 @@ const SignUpFlow = () => {
               {locationError && <ToastNotification message={locationErrorMsg || ''} type="error" />}
               <View style={[styles.imageContainer, { backgroundColor: theme.surface }]}>
                 <Image 
-                  source={{ uri: 'https://i.imgur.com/g91t4O5.png' }} 
+                  source={{ uri: 'https://static.vecteezy.com/system/resources/previews/010/801/642/non_2x/aerial-clean-top-view-of-the-night-time-city-map-with-street-and-river-001-vector.jpg' }} 
                   style={styles.locationImage}
                   resizeMode="contain"
                 />

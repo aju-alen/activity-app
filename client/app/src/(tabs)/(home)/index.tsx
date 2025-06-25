@@ -17,6 +17,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useTheme } from '@/providers/ThemeProviders';
 import { FONTS } from '@/constants/Fonts';
 import ActivityDetailModal from '@/components/ui/ActivityDetailModal';
+import { developmentLogs } from '@/utils/DevelopmentLogs';
 
 const MOCK_CATEGORIES = [
   { id: '1', name: 'Sports', icon: 'tennisball-outline' },
@@ -45,7 +46,7 @@ const MOCK_ACTIVITIES = [
 
 const HomePage = () => {
   const { theme } = useTheme();
-  console.log(theme, "theme in HomePage");
+  developmentLogs(theme, "theme in HomePage");
   
   const [scrollY] = useState(new Animated.Value(0));
   const [isModalVisible, setModalVisible] = useState(false);

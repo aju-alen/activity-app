@@ -15,6 +15,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '@/providers/ThemeProviders';
 import { FONTS } from '@/constants/Fonts';
 import { router } from 'expo-router';
+import { developmentLogs } from '@/utils/DevelopmentLogs';
 
 const { width } = Dimensions.get('window');
 
@@ -160,12 +161,12 @@ const DiscoverPage = () => {
   const swiperRef = useRef<Swiper<Activity>>(null);
 
   const handleSwipeRight = (cardIndex: number) => {
-    console.log('Accepted Activity:', MOCK_ACTIVITIES[cardIndex].title);
+    developmentLogs('Accepted Activity:', MOCK_ACTIVITIES[cardIndex].title);
     router.push('/src/(tabs)/(threads)');
   };
   
   const handleSwipeLeft = (cardIndex: number) => {
-    console.log('Dismissed Activity:', MOCK_ACTIVITIES[cardIndex].title);
+    developmentLogs('Dismissed Activity:', MOCK_ACTIVITIES[cardIndex].title);
   };
 
   return (
@@ -179,7 +180,7 @@ const DiscoverPage = () => {
         renderCard={(card) => card ? <Card card={card} /> : null}
         onSwipedLeft={handleSwipeLeft}
         onSwipedRight={handleSwipeRight}
-        onSwipedAll={() => console.log('onSwipedAll')}
+        onSwipedAll={() => developmentLogs('onSwipedAll')}
         cardIndex={0}
         backgroundColor={'transparent'}
         stackSize={2}

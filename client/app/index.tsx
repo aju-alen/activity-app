@@ -1,10 +1,10 @@
 import { Redirect } from "expo-router";
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
-import { useCallback, useEffect, useState } from "react";
-import { View, Image, StyleSheet } from "react-native";
+import { useEffect, useState } from "react";
+import { View,  StyleSheet } from "react-native";
+import { developmentErrorLogs } from "@/utils/DevelopmentLogs";
 
-// Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
 
 export default function Page() {
@@ -37,7 +37,7 @@ export default function Page() {
           setIsReady(true);
         }
       } catch (error) {
-        console.error('Error preparing app:', error);
+        developmentErrorLogs(error, 'Error preparing app');
       }
     }
 

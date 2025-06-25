@@ -5,7 +5,12 @@ Helps track bugs and also serves as a knowledge base for future reference and fo
 
 ---
 
-## 🐞 Issue #1: `INSTALL_FAILED_UPDATE_INCOMPATIBLE` during Android prebuild
+## 📋 Table of contents
+
+- [🐞 Issue #1: `INSTALL_FAILED_UPDATE_INCOMPATIBLE` during Android prebuild](#-issue-1-install_failed_update_incompatible-during-android-prebuild)
+
+
+# 🐞 Issue #1: `INSTALL_FAILED_UPDATE_INCOMPATIBLE` during Android prebuild
 **Date**: 2025-06-25  
 **Platform**: Android Simulator  
 **Tech Stack**: Expo (Prebuild)
